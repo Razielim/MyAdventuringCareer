@@ -22,7 +22,7 @@ function define_misc_components()
             </div><div class="right_entries centered_vertically tooltippable">
                 <span class="tooltiptext" style="width: 120px;">Progress Points</span>
             <img src="assets/iconpack/icon_pp.png" width="30" height="30" class="left_entries">
-            <point_counter_requirement v-bind:item = "game.resources[0][0]"></point_counter_requirement></div>`
+            <point_counter_requirement v-bind:item = "game.general_resources[0][0]"></point_counter_requirement></div>`
     });
 }
 

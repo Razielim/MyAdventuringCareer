@@ -75,8 +75,7 @@ function game_loop()
 
 function start_game_context()
 {
-    //TODO: test for which screen the game should load in on
-    //load_adventure_screen();    
+    load_adventure_screen();    
     var loopTimer = setInterval(game_loop, 1000/tickrate);
 }
 

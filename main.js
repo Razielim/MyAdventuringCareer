@@ -17,6 +17,61 @@ var general_resources = [{id: 0, text: "Progress Points", count: 0, required: 10
 var general_upgrades = [{id: 0, text: "NYI", unlocked: false, active: false}];
 
 
+var mInterfaceX = 0, mInterfaceY = 0, mDiffX = 0, mDiffY = 0, mLastX = -1, mLastY = -1;
+var mMouseClickX, mMouseClickY, mCurX, mCurY;
+var mMouseDown = false;
+
+function updateScreenPos(pX, pY)
+{
+    var tElements = document.getElementsByClassName("posmove");
+    Array.prototype.forEach.call(tElements, function(tElement) {
+        tElement.style.left = (window.innerWidth / 2 + pX) + "px";
+        tElement.style.top = (window.innerWidth / 2 + pY) + "px";
+    });
+}
+
+function autoUpdate() 
+{
+    var tX = mInterfaceX + mDiffX;
+    var tY = mInterfaceY + mDiffY;
+    if(tX == mLastX && tY == mLastY){
+        return;
+    }
+
+    updateScreenPos(tX, tY);
+    mLastX = tX; mLastY = tY;
+}
+setInterval(autoUpdate, 16);
+
+function mouseDown(pEvent) 
+{
+    if (pEvent.button !== 0) { 
+        return; 
+    }
+
+    mMouseClickX = [pEvent.pageX];
+    mMouseClickY = [pEvent.pageY];
+    mMouseDown = true;
+}
+  
+function mouseUp(pEvent) 
+{
+    mMouseDown = false;
+    mInterfaceX += mDiffX;
+    mInterfaceY += mDiffY;
+    mDiffX = 0; mDiffY = 0;
+}
+
+function mouseMove(pEvent) 
+{
+    mCurX = pEvent.pageX;
+    mCurY = pEvent.pageY;
+    if (mMouseDown) {
+      mDiffX = mCurX - mMouseClickX;
+      mDiffY = mCurY - mMouseClickY;
+    }
+}
+
 /**
  * Function that creates a new game object with an empty save file
  * @returns New blank game object
@@ -24,6 +79,13 @@ var general_upgrades = [{id: 0, text: "NYI", unlocked: false, active: false}];
 function newGame()
 {  
     return {
+        topscreen: screens.ADVENTURE,
+        //subscreen: screens.EDUCATION.ACTIONS,
+        version: curVersion,
+        overlay: overlays.NONE,
+        //unlock_states: [general_actions, education_actions],
+        resources: [general_resources, adventure_resources]
+        //upgrades: [general_upgrades, education_upgrades, education_spark_upgrades]
     }
 }
 
@@ -106,6 +168,11 @@ function load_game()
     start_game_context();
 }
 
+
+
+document.body.addEventListener('mousedown', (tEvent) => { mouseDown(tEvent) });
+document.body.addEventListener('mouseup', (tEvent) => { mouseUp(tEvent) });
+document.onmousemove = mouseMove;
 
 
 

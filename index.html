@@ -1,31 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="w-100 h-100">
     <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="index.css">
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <script src="vue.min.js"></script>
         <script defer src="vue_init.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
         <script defer src="main.js"></script>
         <script defer src="adventure.js"></script>
     </head>
 
 
-    <body onload="load_game()">
-        <div id="app">
-            <div id="game_container">
+    <body onload="load_game()" class="w-100 h-100">
+        <div id="app" class="w-100 h-100">
+            <div id="game_container" class="w-100 h-100">
                 <div id="top_pane">
                     <!--information pane and screen select-->
-                    <top_pane_holder id="top_pane_holder"></top_pane_holder>
+                    <top_pane_holder id="top_pane_holder" class="position-top d-flex container-fluid bg-dark text-white"></top_pane_holder>
                 </div>
-                <div id="center_pane">
-                    <div v-if="game.topscreen == screens.ADVENTURE" id="screen_adventure">
+                <div id="center_pane" class="flex-grow position-static p-3 my-3 bg-dark text-white">
+                    <div v-if="game.topscreen == screens.ADVENTURE" id="screen_adventure" class=" posmove">
                         <div id="center_pane_adventure">
+                            <adv_enemy></adv_enemy>
                             <table>
-                                <td id="center_pane_adventure_left">
+                                <td id="center_pane_adventure_left" class="container p-3 my-3 bg-success text-white">
                                     <!--adventure screen left side (upgrades)-->
                                     Left Center
                                 </td>
-                                <td id="center_pane_adventure_left">
+                                <td id="center_pane_adventure_left" class="container p-3 my-3 bg-danger text-white">
                                     <!--adventure screen right side (resource overview)-->
                                     Right Center
                                 </td>
@@ -33,7 +39,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="bottom_pane">
+                <div id="bottom_pane" class="position-bottom container-fluid bg-dark text-white">
                     <!--shop and links-->
                     Bottom
                 </div>

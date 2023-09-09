@@ -4,9 +4,10 @@
 function define_adventure_components()
 {
     Vue.component('adv_enemy', {
-        props: ['item'],
+        props: ['item', 'x_offset', 'y_offset'],
         template: `<button class="adv_enemy absolute std_btn no-pz" 
-        :style="{ 'background-image': 'url('  + 'assets/adventure/' + item.bg_index + '.png' + ')' }">
+        :style="{ 'background-image': 'url('  + 'assets/adventure/' + item.bg_index + '.png' + ')',  
+                 'left': x_offset + 'px', 'top': + y_offset + 'px'}">
         </button>`
     });
 }
@@ -29,12 +30,6 @@ function define_misc_components()
             <img src="assets/iconpack/icon_pp.png" width="30" height="30" class="left_entries">
             <point_counter_requirement v-bind:item = "game.resources[0][0]"></point_counter_requirement></div>`
     });
-    Vue.component('standard_button', {
-        props: ['item'],
-        template: `<button class="absolute no-pz" style="width:{{ item.width }}px;height:{{ item.height }}px>
-        {{ item.text }}
-        </button>`
-    });
 }
 
 
@@ -50,10 +45,16 @@ function init_vue()  //this function is called as part of an onload() function (
 {
     define_Vue_components(); //calls definitions for special Vue components to be used in the html to be made
 
-    var app = new Vue({ //create a new Vue environment
+    return new Vue({ //create a new Vue environment
         el:"#app",  //on this div
         data:{  //with these variables we will use within this div as Vue variables
-            game  //base object that will hold game variables and context
+            game,  //base object that will hold game variables and context
+            vueCanvas: null
         },
+        mounted() {
+            var htmlCanvas = document.getElementById("html_canvas");
+            var canvasContext = htmlCanvas.getContext("2d");
+            this.vueCanvas = canvasContext;
+        }
     });
 }

@@ -1,6 +1,6 @@
-var game;
+var vueApp;
 
-var tickrate = 30.0;
+var tickrate = 60.0;
 var curVersion = "0.1";
 var screens = {
     ADVENTURE: "adventure"
@@ -15,9 +15,7 @@ var overlays = {
 var general_actions = [{id: 0, text: "Settings", unlocked: true}];
 var general_resources = [{id: 0, text: "Progress Points", count: 0, required: 1000}];
 var general_upgrades = [{id: 0, text: "NYI", unlocked: false, active: false}];
-var enemies = [{id: 0, unlocked: true, bg_index: 1}, 
-                {id: 1, unlocked: true, bg_index: 2}];
-
+var enemies = [makeEnemyFromId(0), makeEnemyFromId(1)];
 
 var mStartWidth = window.innerWidth, mStartHeight = window.innerHeight;
 var mInterfaceX = -mStartWidth/2, mInterfaceY = -mStartHeight/2, mDiffX = 0, mDiffY = 0, mLastX = -1, mLastY = -1;
@@ -33,7 +31,7 @@ function updateScreenPos(pX, pY)
     });
 }
 
-function autoUpdate() 
+function mouseUpdate() 
 {
     var tX = mInterfaceX + mDiffX;
     var tY = mInterfaceY + mDiffY;
@@ -44,7 +42,6 @@ function autoUpdate()
     updateScreenPos(tX, tY);
     mLastX = tX; mLastY = tY;
 }
-setInterval(autoUpdate, 16);
 
 function mouseDown(pEvent) 
 {
@@ -127,12 +124,17 @@ function loadSaveGame(save)
 function update_state()
 {
     update_adventure();
+    mouseUpdate();
 }
 
 
 
 function game_loop()
 {
+    if(!vueApp){
+        return;
+    }
+
     update_state();
 }
 
@@ -141,7 +143,7 @@ function game_loop()
 function start_game_context()
 {
     load_adventure_screen();    
-    var loopTimer = setInterval(game_loop, 1000/tickrate);
+    setInterval(game_loop, 1000/tickrate);
 }
 
 
@@ -165,8 +167,8 @@ function load_game()
         //console.log(tEx);
         game = newGame();
     }
-
-    init_vue();  //with the game object created, a Vue environment can be created that uses the game object as its data
+    
+    vueApp = init_vue();  //with the game object created, a Vue environment can be created that uses the game object as its data
 
     start_game_context();
 }

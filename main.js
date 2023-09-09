@@ -15,9 +15,12 @@ var overlays = {
 var general_actions = [{id: 0, text: "Settings", unlocked: true}];
 var general_resources = [{id: 0, text: "Progress Points", count: 0, required: 1000}];
 var general_upgrades = [{id: 0, text: "NYI", unlocked: false, active: false}];
+var enemies = [{id: 0, unlocked: true, bg_index: 1}, 
+                {id: 1, unlocked: true, bg_index: 2}];
 
 
-var mInterfaceX = 0, mInterfaceY = 0, mDiffX = 0, mDiffY = 0, mLastX = -1, mLastY = -1;
+var mStartWidth = window.innerWidth, mStartHeight = window.innerHeight;
+var mInterfaceX = -mStartWidth/2, mInterfaceY = -mStartHeight/2, mDiffX = 0, mDiffY = 0, mLastX = -1, mLastY = -1;
 var mMouseClickX, mMouseClickY, mCurX, mCurY;
 var mMouseDown = false;
 
@@ -25,8 +28,8 @@ function updateScreenPos(pX, pY)
 {
     var tElements = document.getElementsByClassName("posmove");
     Array.prototype.forEach.call(tElements, function(tElement) {
-        tElement.style.left = (window.innerWidth / 2 + pX) + "px";
-        tElement.style.top = (window.innerWidth / 2 + pY) + "px";
+        tElement.style.left = (mStartWidth / 2 + pX) + "px";
+        tElement.style.top = (mStartHeight / 2 + pY) + "px";
     });
 }
 
@@ -83,7 +86,7 @@ function newGame()
         //subscreen: screens.EDUCATION.ACTIONS,
         version: curVersion,
         overlay: overlays.NONE,
-        //unlock_states: [general_actions, education_actions],
+        enemies: enemies,
         resources: [general_resources, adventure_resources]
         //upgrades: [general_upgrades, education_upgrades, education_spark_upgrades]
     }

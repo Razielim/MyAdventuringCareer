@@ -5,8 +5,8 @@ function define_adventure_components()
 {
     Vue.component('adv_enemy', {
         props: ['item'],
-        template: `<button class="absolute std_btn no-pz">
-        β
+        template: `<button class="adv_enemy absolute std_btn no-pz" 
+        :style="{ 'background-image': 'url('  + 'assets/adventure/' + item.bg_index + '.png' + ')' }">
         </button>`
     });
 }
@@ -28,6 +28,12 @@ function define_misc_components()
                 <span class="tooltiptext" style="width: 120px;">Progress Points</span>
             <img src="assets/iconpack/icon_pp.png" width="30" height="30" class="left_entries">
             <point_counter_requirement v-bind:item = "game.resources[0][0]"></point_counter_requirement></div>`
+    });
+    Vue.component('standard_button', {
+        props: ['item'],
+        template: `<button class="absolute no-pz" style="width:{{ item.width }}px;height:{{ item.height }}px>
+        {{ item.text }}
+        </button>`
     });
 }
 

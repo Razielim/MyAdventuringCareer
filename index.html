@@ -22,20 +22,20 @@
                     <!--information pane and screen select-->
                     <top_pane_holder id="top_pane_holder" class="position-top d-flex container-fluid bg-dark text-white"></top_pane_holder>
                 </div>
-                <div id="center_pane" class="flex-grow position-static p-3 my-3 bg-dark text-white">
-                    <div v-if="game.topscreen == screens.ADVENTURE" id="screen_adventure" class=" posmove">
-                        <div id="center_pane_adventure">
-                            <adv_enemy></adv_enemy>
-                            <table>
+                <div id="center_pane" class="w-100 h-100 flex-grow position-static p-3 my-3 bg-dark text-white">
+                    <div v-if="game.topscreen == screens.ADVENTURE" id="screen_adventure" class="w-100 h-100">
+                        <div id="center_pane_adventure" class="w-100 h-100 posmove">
+                            <adv_enemy v-for="enemy in game.enemies" v-if="enemy.unlocked"
+                                        v-bind:item="enemy">
+                            </adv_enemy>
+                            <!--<table>
                                 <td id="center_pane_adventure_left" class="container p-3 my-3 bg-success text-white">
-                                    <!--adventure screen left side (upgrades)-->
                                     Left Center
                                 </td>
-                                <td id="center_pane_adventure_left" class="container p-3 my-3 bg-danger text-white">
-                                    <!--adventure screen right side (resource overview)-->
+                                <td id="center_pane_adventure_right" class="container p-3 my-3 bg-danger text-white">
                                     Right Center
                                 </td>
-                            </table>
+                            </table>-->
                         </div>
                     </div>
                 </div>

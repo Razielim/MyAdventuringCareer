@@ -25,11 +25,13 @@
                 </div>
                 <div id="center_pane" class="w-100 h-100 flex-grow position-static p-3 my-3 bg-dark text-white">
                     <div v-if="game.topscreen == screens.ADVENTURE" id="screen_adventure" class="w-100 h-100">
-                        <canvas id="html_canvas" class="posmove absolute w-100 h-100"></canvas>
                         <div id="center_pane_adventure" class="w-100 h-100 posmove absolute">
                             <template v-for="enemy in game.enemies">
                                 <adv_enemy v-if="enemy.unlocked" v-bind:item="enemy" v-bind:x_offset="enemy.x_offset" v-bind:y_offset="enemy.y_offset"></adv_enemy>
-                            </template> 
+                            </template>
+                            <template v-for="line in game.vueComponents.enemyConnectionLines">
+                                <enemy_connection_line v-if="line.showing" v-bind:item="line"></enemy_connection_line>
+                            </template>
                             
                             <!--<table>
                                 <td id="center_pane_adventure_left" class="container p-3 my-3 bg-success text-white">

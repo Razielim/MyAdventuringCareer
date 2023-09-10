@@ -17,6 +17,8 @@ var general_resources = [{id: 0, text: "Progress Points", count: 0, required: 10
 var general_upgrades = [{id: 0, text: "NYI", unlocked: false, active: false}];
 var enemies = [];
 
+var vueComponents = { enemyConnectionLines: [] };
+
 var mStartWidth = window.innerWidth, mStartHeight = window.innerHeight;
 var mInterfaceOffsetX = -mStartWidth/2, mInterfaceOffsetY = -mStartHeight/2;
 var mInterfaceXMax = mStartWidth/2, mInterfaceYMax = mStartHeight/2;
@@ -26,7 +28,7 @@ var mMouseDown = false;
 
 function updateScreenPos(pX, pY)
 {
-    var tElements = document.getElementsByClassName("posmove");
+    let tElements = document.getElementsByClassName("posmove");
     Array.prototype.forEach.call(tElements, function(tElement) {
         tElement.style.left = (mStartWidth / 2 + pX) + "px";
         tElement.style.top = (mStartHeight / 2 + pY) + "px";
@@ -35,8 +37,8 @@ function updateScreenPos(pX, pY)
 
 function mouseUpdate() 
 {
-    var tX = mInterfaceX + mDiffX;
-    var tY = mInterfaceY + mDiffY;
+    let tX = mInterfaceX + mDiffX;
+    let tY = mInterfaceY + mDiffY;
     if(tX == mLastX && tY == mLastY){
         return;
     }
@@ -97,6 +99,7 @@ function newGame()
         version: curVersion,
         overlay: overlays.NONE,
         enemies: enemies,
+        vueComponents: vueComponents,
         resources: [general_resources, adventure_resources]
         //upgrades: [general_upgrades, education_upgrades, education_spark_upgrades]
     }
@@ -162,9 +165,11 @@ function start_game_context()
 
 function init_enemies()
 {
-    for(var i = 0; i < enemies_warehouse.length; i++){
+    for(let i = 0; i < enemies_warehouse.length; i++){
         enemies.push(makeEnemyFromId(i));
     }
+    createEnemyPlacement();
+    formAllLines();
 }
 
 

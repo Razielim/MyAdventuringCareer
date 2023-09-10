@@ -5,10 +5,17 @@ function define_adventure_components()
 {
     Vue.component('adv_enemy', {
         props: ['item', 'x_offset', 'y_offset'],
-        template: `<button class="adv_enemy absolute std_btn no-pz" 
+        template: `<button class="adv_enemy absolute std_btn" 
         :style="{ 'background-image': 'url('  + 'assets/adventure/' + item.bg_index + '.png' + ')',  
                  'left': x_offset + 'px', 'top': + y_offset + 'px'}">
         </button>`
+    });
+    Vue.component('enemy_connection_line', {
+        props: ['item'],
+        template: `<div class="line absolute"
+        :style="{ 'left': item.x_start + 'px', 'top': + item.y_start + 'px', 
+                'height': item.height + 'px', 'width': item.width + 'px'}">
+        </div>`
     });
 }
 
@@ -48,13 +55,7 @@ function init_vue()  //this function is called as part of an onload() function (
     return new Vue({ //create a new Vue environment
         el:"#app",  //on this div
         data:{  //with these variables we will use within this div as Vue variables
-            game,  //base object that will hold game variables and context
-            vueCanvas: null
-        },
-        mounted() {
-            var htmlCanvas = document.getElementById("html_canvas");
-            var canvasContext = htmlCanvas.getContext("2d");
-            this.vueCanvas = canvasContext;
+            game  //base object that will hold game variables and context
         }
     });
 }

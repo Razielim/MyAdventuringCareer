@@ -1,57 +1,73 @@
 
 var adventure_resources = [{id: 0, text: "", count: 0, required: 0}];
 
-var updateMap = true;
-
+var updateMap = true, updateMapConnections = true;
 
 function updateEnemyPlacement() 
 {
     let tCenterX = mStartWidth/2, tCenterY = mStartHeight/2;
+
     enemies.forEach((enemy) => {
         enemy.x_offset = tCenterX;
         enemy.y_offset = tCenterY;
 
-        let id = enemy.id;
-        if(id == 0) {
+        let tId = enemy.id;
+        if(tId == 0) {
             return;
         }
-        if(id >= 100 && id <= 199){
-            //Ring 1
-            enemy.x_offset += 100;
-            enemy.y_offset += 100;
-            return;
-        }
-        if(id >= 200 && id <= 299){
-            //Ring 2
-            enemy.x_offset += 200;
-            enemy.y_offset += 200;
-            return;
-        }
-        if(id >= 300 && id <= 399){
-            //Ring 3
-            enemy.x_offset += 300;
-            enemy.y_offset += 300;
-            return;
-        }
-        if(id >= 400 && id <= 499){
-            //Ring 4
-            enemy.x_offset += 400;
-            enemy.y_offset += 400;
-            return;
-        }
-        if(id >= 500 && id <= 599){
-            //Ring 5
-            enemy.x_offset += 500;
-            enemy.y_offset += 500;
-            return;
-        }
-        if(id >= 600 && id <= 699){
-            //Ring 6
-            enemy.x_offset += 600;
-            enemy.y_offset += 600;
-            return;
-        }
+
+        let tPlacement = findEnemyPlacementFromId(tId);
+
+        let tX_Offset = (tPlacement[1] - 9) * 100;
+        let tY_Offset = (tPlacement[0] - 9) * 100;
+        
+        enemy.x_offset += tX_Offset;
+        enemy.y_offset += tY_Offset;
     });
+
+    updateMapConnections = true;
+}
+
+function updateCanvas()
+{
+    vueApp.vueCanvas.clearRect(0, 0, vueApp.vueCanvas.width, vueApp.vueCanvas.height);
+    
+    let tCenterX = mStartWidth/2, tCenterY = mStartHeight/2;
+
+    enemies.forEach((enemy) => {
+        if(!enemy.unlocked){
+            return;
+        }
+        let connectedToEnemies = enemy.connectsTo;
+        if(!connectedToEnemies) {
+            return;
+        }
+
+        let tId = enemy.id;
+        let tPlacement = findEnemyPlacementFromId(tId);
+
+        let tX_Offset = (tPlacement[1] - 9) * 100;
+        let tY_Offset = (tPlacement[0] - 9) * 100;
+        let tXEnemy = tCenterX + tX_Offset;
+        let tYEnemy = tCenterY + tY_Offset;
+        
+        connectedToEnemies.forEach((connectedEnemyId) => {
+            let tPlacementOther = findEnemyPlacementFromId(connectedEnemyId);
+
+            let tX_OffsetOther = (tPlacementOther[1] - 9) * 100;
+            let tY_OffsetOther = (tPlacementOther[0] - 9) * 100;
+            let tXEnemyOther = tCenterX + tX_OffsetOther;
+            let tYEnemyOther = tCenterY + tY_OffsetOther;
+            
+            //Problem: Canvas is stretched and its coordinates do not line up anymore
+
+            //console.log(tXEnemy + " " + tYEnemy + " " + tXEnemyOther + " " + tYEnemyOther);
+
+            //vueApp.vueCanvas.moveTo(tXEnemy, tYEnemy);
+            //vueApp.vueCanvas.lineTo(tXEnemyOther, tYEnemyOther);
+        });
+    });
+    vueApp.vueCanvas.stroke();
 }
 
 //called 60 times a second
@@ -60,10 +76,10 @@ function update_adventure()
     if(updateMap) {
         updateMap = false;
         updateEnemyPlacement();
-        
-        // vueApp.vueCanvas.clearRect(0, 0, vueApp.vueCanvas.width, vueApp.vueCanvas.height);
-        // vueApp.vueCanvas.rect(20, 20, 50, 100);
-        // vueApp.vueCanvas.stroke();
+    }
+    if(updateMapConnections){
+        updateMapConnections = false;
+        updateCanvas();
     }
 }
 

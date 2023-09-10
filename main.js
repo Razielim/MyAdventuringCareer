@@ -15,11 +15,13 @@ var overlays = {
 var general_actions = [{id: 0, text: "Settings", unlocked: true}];
 var general_resources = [{id: 0, text: "Progress Points", count: 0, required: 1000}];
 var general_upgrades = [{id: 0, text: "NYI", unlocked: false, active: false}];
-var enemies = [makeEnemyFromId(0), makeEnemyFromId(1)];
+var enemies = [];
 
 var mStartWidth = window.innerWidth, mStartHeight = window.innerHeight;
-var mInterfaceX = -mStartWidth/2, mInterfaceY = -mStartHeight/2, mDiffX = 0, mDiffY = 0, mLastX = -1, mLastY = -1;
-var mMouseClickX, mMouseClickY, mCurX, mCurY;
+var mInterfaceOffsetX = -mStartWidth/2, mInterfaceOffsetY = -mStartHeight/2;
+var mInterfaceXMax = mStartWidth/2, mInterfaceYMax = mStartHeight/2;
+var mInterfaceX = mInterfaceOffsetX, mInterfaceY = mInterfaceOffsetY, mDiffX = 0, mDiffY = 0, mLastX = -1, mLastY = -1;
+var mMouseClickX, mMouseClickY, mMouseLastX, mMouseLastY;
 var mMouseDown = false;
 
 function updateScreenPos(pX, pY)
@@ -64,11 +66,22 @@ function mouseUp(pEvent)
 
 function mouseMove(pEvent) 
 {
-    mCurX = pEvent.pageX;
-    mCurY = pEvent.pageY;
-    if (mMouseDown) {
-      mDiffX = mCurX - mMouseClickX;
-      mDiffY = mCurY - mMouseClickY;
+    let tMouseCurX = pEvent.pageX, tMouseCurY = pEvent.pageY;
+    if (mMouseDown) 
+    {
+      mDiffX = tMouseCurX - mMouseClickX;
+      mDiffY = tMouseCurY - mMouseClickY;
+
+      if(mInterfaceX + mDiffX > mInterfaceXMax + mInterfaceOffsetX || mInterfaceX + mDiffX < -mInterfaceXMax + mInterfaceOffsetX){
+        mDiffX = mMouseLastX - mMouseClickX;
+      }else{
+        mMouseLastX = tMouseCurX;
+      }
+      if(mInterfaceY + mDiffY > mInterfaceYMax + mInterfaceOffsetY || mInterfaceY + mDiffY < -mInterfaceYMax  + mInterfaceOffsetY){
+        mDiffY = mMouseLastY - mMouseClickY;
+      }else{
+        mMouseLastY = tMouseCurY;
+      }
     }
 }
 
@@ -147,6 +160,13 @@ function start_game_context()
 }
 
 
+function init_enemies()
+{
+    for(var i = 0; i < enemies_warehouse.length; i++){
+        enemies.push(makeEnemyFromId(i));
+    }
+}
+
 
 /**
  * First called function on html body's onload() that creates a game context either from a savefile or from a fresh save
@@ -169,6 +189,8 @@ function load_game()
     }
     
     vueApp = init_vue();  //with the game object created, a Vue environment can be created that uses the game object as its data
+    
+    init_enemies();
 
     start_game_context();
 }

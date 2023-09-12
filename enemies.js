@@ -19,21 +19,33 @@
 //     [954, 953, 952, 951, 950, 949, 948, 947, 946, 945, 944, 943, 942, 941, 940, 939, 938, 937, 936]  //bottom 9
 
 
-var enemies_warehouse = [
-    {id: 0, bg_index: 1, connectsTo: [101, 103, 105, 107]}, 
-    {id: 101, bg_index: 2, connectsTo: [202]},
-    {id: 103, bg_index: 3},
-    {id: 105, bg_index: 4},
-    {id: 107, bg_index: 13},
-    {id: 202, bg_index: 5, connectsTo: [303]},
-    {id: 303, bg_index: 6, connectsTo: [404]},
-    {id: 404, bg_index: 7, connectsTo: [505]},
-    {id: 505, bg_index: 8, connectsTo: [606]},
-    {id: 606, bg_index: 9, connectsTo: [707]},
-    {id: 707, bg_index: 10, connectsTo: [808]},
-    {id: 808, bg_index: 11, connectsTo: [909]},
-    {id: 909, bg_index: 12}
+let enemies_warehouse = [
+    {id: 0, connectsTo: [101, 103, 105, 107]}, 
+    {id: 101, connectsTo: [202]},
+    {id: 103},
+    {id: 105},
+    {id: 107},
+    {id: 202, connectsTo: [303]},
+    {id: 203},
+    {id: 303, connectsTo: [304, 404]},
+    {id: 304, connectsTo: [203, 405]},
+    {id: 404, connectsTo: [505]},
+    {id: 405},
+    {id: 505, connectsTo: [606]},
+    {id: 606, connectsTo: [707]},
+    {id: 707, connectsTo: [808]},
+    {id: 808, connectsTo: [909]},
+    {id: 909}
 ];
+
+function init_enemies()
+{
+    for(let i = 0; i < enemies_warehouse.length; i++){
+        enemies.push(makeEnemyFromId(i));
+    }
+    createEnemyPlacement();
+    formAllLines();
+}
 
 function findEnemyPlacementFromId(pId)
 {
@@ -71,15 +83,15 @@ function findEnemyPlacementFromId(pId)
 }
 
 function makeEnemyFromId(pId) {
-    let enemy = enemies_warehouse[pId];
-    if(enemy.id == 0){
-        enemy.unlocked = true;
+    let tEnemy = enemies_warehouse[pId];
+    if(tEnemy.id == 0){
+        tEnemy.unlocked = true;
     }else{
-        enemy.unlocked = true;
+        tEnemy.unlocked = false;
     }
-    enemy.x_offset = 0;
-    enemy.y_offset = 0;
-    return enemy;
+    tEnemy.x_offset = 0;
+    tEnemy.y_offset = 0;
+    return tEnemy;
 }
 
 function getEnemyFromId(pId) {
@@ -115,26 +127,33 @@ function createEnemyPlacement()
 
 function formAllLines()
 {
+    vueComponents.enemyConnectionLines = [];
+
     let tCenterX = mStartWidth/2, tCenterY = mStartHeight/2;
     let tMinSize = 10;
     let tMonsterImageSizeHalf = 32;
 
-    enemies_warehouse.forEach((enemy) => 
+    enemies_warehouse.forEach((tEnemy) => 
     {
-        if(!enemy.connectsTo) {
+        if(!tEnemy.connectsTo || !tEnemy.unlocked) {
             return;
         }
 
-        let tId = enemy.id;
+        let tId = tEnemy.id;
         let tPlacement = findEnemyPlacementFromId(tId);
         let tX = tCenterX + tPlacement[0] + (tMonsterImageSizeHalf - tMinSize/2);
         let tY = tCenterY + tPlacement[1] + (tMonsterImageSizeHalf - tMinSize/2);
 
-        enemy.connectsTo.forEach((enemyOtherId) => 
-        { 
+        tEnemy.connectsTo.forEach((tEnemyOtherId) => 
+        {
+            let tEnemyOther = getEnemyFromId(tEnemyOtherId);
+            if(!tEnemyOther.unlocked){
+                return;
+            }
+
             let tCurX = tX;
             let tCurY = tY;
-            let tPlacementOther = findEnemyPlacementFromId(enemyOtherId);
+            let tPlacementOther = findEnemyPlacementFromId(tEnemyOtherId);
             let tWidth = tPlacementOther[0] - tPlacement[0];
             let tHeight = tPlacementOther[1] - tPlacement[1];
 
@@ -143,8 +162,8 @@ function formAllLines()
                 tWidth *= -1;
             }
             if(tWidth != 0){
-                tCurX += tMonsterImageSizeHalf * 1.1;
-                tWidth -= tMonsterImageSizeHalf * 1.9;
+                tCurX += tMonsterImageSizeHalf + tMinSize/2;
+                tWidth -= tMonsterImageSizeHalf * 2;
             }
 
             if(tHeight < 0){
@@ -152,17 +171,39 @@ function formAllLines()
                 tHeight *= -1;
             }
             if(tHeight != 0){
-                tCurY += tMonsterImageSizeHalf * 1.1;
-                tHeight -= tMonsterImageSizeHalf * 1.9;
+                tCurY += tMonsterImageSizeHalf + tMinSize/2;
+                tHeight -= tMonsterImageSizeHalf * 2;
             }
 
             tWidth = Math.max(tWidth, tMinSize);
             tHeight = Math.max(tHeight, tMinSize);
 
             let tLine = {
-                startId: tId, endId: enemyOtherId, showing: true, x_start: tCurX, y_start: tCurY, width: tWidth, height: tHeight 
+                startId: tId, endId: tEnemyOtherId, showing: true, x_start: tCurX, y_start: tCurY, width: tWidth, height: tHeight 
             };
             vueComponents.enemyConnectionLines.push(tLine);
         });
+    });
+}
+
+function unlockEnemy(pId)
+{
+    let tEnemy = getEnemyFromId(pId);
+    tEnemy.unlocked = true;
+    formAllLines();
+}
+
+function unlockEnemyFromKill(pId)
+{
+    let tEnemy = getEnemyFromId(pId);
+    if(!tEnemy.connectsTo){
+        return;
+    }
+    
+    tEnemy.connectsTo.forEach((tConnectedEnemyId) => {
+        let tEnemyOther = getEnemyFromId(tConnectedEnemyId);
+        if(!tEnemyOther.unlocked){
+            unlockEnemy(tConnectedEnemyId);
+        }
     });
 }

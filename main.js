@@ -1,7 +1,7 @@
 var vueApp;
 
-var tickrate = 60.0;
-var curVersion = "0.1";
+let tickrate = 60.0;
+let curVersion = "0.1";
 var screens = {
     ADVENTURE: "adventure"
 }
@@ -18,74 +18,6 @@ var general_upgrades = [{id: 0, text: "NYI", unlocked: false, active: false}];
 var enemies = [];
 
 var vueComponents = { enemyConnectionLines: [] };
-
-var mStartWidth = window.innerWidth, mStartHeight = window.innerHeight;
-var mInterfaceOffsetX = -mStartWidth/2, mInterfaceOffsetY = -mStartHeight/2;
-var mInterfaceXMax = mStartWidth/2, mInterfaceYMax = mStartHeight/2;
-var mInterfaceX = mInterfaceOffsetX, mInterfaceY = mInterfaceOffsetY, mDiffX = 0, mDiffY = 0, mLastX = -1, mLastY = -1;
-var mMouseClickX, mMouseClickY, mMouseLastX, mMouseLastY;
-var mMouseDown = false;
-
-function updateScreenPos(pX, pY)
-{
-    let tElements = document.getElementsByClassName("posmove");
-    Array.prototype.forEach.call(tElements, function(tElement) {
-        tElement.style.left = (mStartWidth / 2 + pX) + "px";
-        tElement.style.top = (mStartHeight / 2 + pY) + "px";
-    });
-}
-
-function mouseUpdate() 
-{
-    let tX = mInterfaceX + mDiffX;
-    let tY = mInterfaceY + mDiffY;
-    if(tX == mLastX && tY == mLastY){
-        return;
-    }
-
-    updateScreenPos(tX, tY);
-    mLastX = tX; mLastY = tY;
-}
-
-function mouseDown(pEvent) 
-{
-    if (pEvent.button !== 0) { 
-        return; 
-    }
-
-    mMouseClickX = [pEvent.pageX];
-    mMouseClickY = [pEvent.pageY];
-    mMouseDown = true;
-}
-  
-function mouseUp(pEvent) 
-{
-    mMouseDown = false;
-    mInterfaceX += mDiffX;
-    mInterfaceY += mDiffY;
-    mDiffX = 0; mDiffY = 0;
-}
-
-function mouseMove(pEvent) 
-{
-    let tMouseCurX = pEvent.pageX, tMouseCurY = pEvent.pageY;
-    if (mMouseDown) 
-    {
-      mDiffX = tMouseCurX - mMouseClickX;
-      mDiffY = tMouseCurY - mMouseClickY;
-
-      if(mInterfaceX + mDiffX > mInterfaceXMax + mInterfaceOffsetX || mInterfaceX + mDiffX < -mInterfaceXMax + mInterfaceOffsetX){
-        mDiffX = mMouseLastX - mMouseClickX;
-      }else{
-        mMouseLastX = tMouseCurX;
-      }
-      if(mInterfaceY + mDiffY > mInterfaceYMax + mInterfaceOffsetY || mInterfaceY + mDiffY < -mInterfaceYMax  + mInterfaceOffsetY){
-        mDiffY = mMouseLastY - mMouseClickY;
-      }else{
-        mMouseLastY = tMouseCurY;
-      }
-    }
-}
 
 /**
  * Function that creates a new game object with an empty save file
@@ -135,8 +67,6 @@ function loadSaveGame(save)
 }
 
 
-
-
 function update_state()
 {
     update_adventure();
@@ -160,16 +90,6 @@ function start_game_context()
 {
     load_adventure_screen();    
     setInterval(game_loop, 1000/tickrate);
-}
-
-
-function init_enemies()
-{
-    for(let i = 0; i < enemies_warehouse.length; i++){
-        enemies.push(makeEnemyFromId(i));
-    }
-    createEnemyPlacement();
-    formAllLines();
 }
 
 
@@ -199,8 +119,6 @@ function load_game()
 
     start_game_context();
 }
-
-
 
 document.body.addEventListener('mousedown', (tEvent) => { mouseDown(tEvent) });
 document.body.addEventListener('mouseup', (tEvent) => { mouseUp(tEvent) });

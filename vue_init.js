@@ -5,9 +5,9 @@ function define_adventure_components()
 {
     Vue.component('adv_enemy', {
         props: ['item', 'x_offset', 'y_offset'],
-        template: `<button class="adv_enemy absolute std_btn" 
-        :style="{ 'background-image': 'url('  + 'assets/adventure/' + item.bg_index + '.png' + ')',  
-                 'left': x_offset + 'px', 'top': + y_offset + 'px'}">
+        template: `<button v-on:click="clickedEnemy(item)" class="adv_enemy absolute std_btn" 
+        :style="{ 'background-image': 'url('  + 'assets/adventure/' + item.id + '.png' + ')',  
+                 'left': item.x_offset + 'px', 'top': + item.y_offset + 'px'}">
         </button>`
     });
     Vue.component('enemy_connection_line', {

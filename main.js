@@ -6,16 +6,13 @@ var screens = {
     ADVENTURE: "adventure"
 }
 
-var overlays = {
-    NONE: "none",
-    HELP: "help",
-    SHOP: "shop"
-}
-
-var general_actions = [{id: 0, text: "Settings", unlocked: true}];
 var general_resources = [{id: 0, text: "Progress Points", count: 0, required: 1000}];
-var general_upgrades = [{id: 0, text: "NYI", unlocked: false, active: false}];
 var enemies = [];
+var character = { name: "Adventurer", stats: [
+    { showing: true, id: 0, name: "Attack", value: 50}, 
+    { showing: true, id: 1, name: "Defense", value: 100}, 
+    { showing: true, id: 2, name: "Attack Speed", value: 2.0}
+]};
 
 var vueComponents = { enemyConnectionLines: [] };
 
@@ -27,13 +24,11 @@ function newGame()
 {  
     return {
         topscreen: screens.ADVENTURE,
-        //subscreen: screens.EDUCATION.ACTIONS,
         version: curVersion,
-        overlay: overlays.NONE,
         enemies: enemies,
+        character: character,
         vueComponents: vueComponents,
         resources: [general_resources, adventure_resources]
-        //upgrades: [general_upgrades, education_upgrades, education_spark_upgrades]
     }
 }
 

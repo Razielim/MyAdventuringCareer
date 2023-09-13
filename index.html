@@ -21,11 +21,12 @@
         <div id="app" class="w-100 h-100">
             <div id="game_container" class="w-100 h-100">
                 <div id="top_pane">
-                    <!--information pane and screen select-->
-                    <top_pane_holder id="top_pane_holder" class="position-top d-flex container-fluid bg-dark text-white"></top_pane_holder>
+                    <top_pane_holder id="top_pane_holder" class="position-top d-flex container-fluid bg-dark text-light"></top_pane_holder>
                 </div>
                 <div id="center_pane" class="w-100 h-100 flex-grow position-static p-3 my-3 bg-dark text-white">
                     <div v-if="game.topscreen == screens.ADVENTURE" id="screen_adventure" class="w-100 h-100">
+                        <char_stats_tab v-bind:char="game.character">
+                        </char_stats_tab>
                         <div id="center_pane_adventure" class="w-100 h-100 posmove absolute">
                             <template v-for="enemy in game.enemies">
                                 <adv_enemy v-if="enemy.unlocked" v-bind:item="enemy"></adv_enemy>
@@ -33,15 +34,6 @@
                             <template v-for="line in game.vueComponents.enemyConnectionLines">
                                 <enemy_connection_line v-if="line.showing" v-bind:item="line"></enemy_connection_line>
                             </template>
-                            
-                            <!--<table>
-                                <td id="center_pane_adventure_left" class="container p-3 my-3 bg-success text-white">
-                                    Left Center
-                                </td>
-                                <td id="center_pane_adventure_right" class="container p-3 my-3 bg-danger text-white">
-                                    Right Center
-                                </td>
-                            </table>-->
                         </div>
                     </div>
                 </div>

@@ -76,8 +76,18 @@
     background-size: cover;
 }
 
+.stat_icon {
+    width:32px;
+    height:32px;
+    background-size: cover;
+}
+
 .line {
     background: black;
+}
+
+.blank_row {
+    height: 10px !important;
 }
 
 #game_container {
@@ -109,6 +119,13 @@
     background-repeat: no-repeat;
     background-size: auto;
     overflow: hidden;
+}
+
+#char_stats_tab {
+    z-index: 1;
+    width: 15%;
+    height: 40%;
+    background-color: rgb(208, 212, 216);
 }
 
 #center_pane_adventure {
